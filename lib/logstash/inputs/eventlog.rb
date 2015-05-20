@@ -46,10 +46,9 @@ class LogStash::Inputs::EventLog < LogStash::Inputs::Base
       event = LogStash::Event.new(
         "host"             => @hostname,
         "Logfile"          => @logfile,
-        "message"          => log["description"],
+        "message"          => log["description"].strip,
         "Category"         => log["category"],
         "ComputerName"     => log["computer"],
-        "EventCode"        => log["event_id"],
         "EventIdentifier"  => log["event_id"],
         "EventType"        => log["event_type"],
         "RecordNumber"     => log["record_number"],
