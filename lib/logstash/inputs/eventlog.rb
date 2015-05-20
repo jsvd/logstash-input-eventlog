@@ -43,12 +43,23 @@ class LogStash::Inputs::EventLog < LogStash::Inputs::Base
     @logger.debug("Tailing Windows Event Log '#{@logfile}'")
     @eventlog.tail(@interval/1000.0) do |log|
 
-      e_hash = Hash[log.each_pair.to_a].merge({
-        "host" => @hostname,
-        "path" => @logfile,
-      })
-      @logger.debug e_hash.inspect
-      event = LogStash::Event.new(e_hash)
+      event = LogStash::Event.new(
+        "host"             => @hostname,
+        "Logfile"          => @logfile,
+        "message"          => log["description"],
+        "Category"         => log["category"],
+        "ComputerName"     => log["computer"],
+        "EventCode"        => log["event_id"],
+        "EventIdentifier"  => log["event_id"],
+        "EventType"        => log["event_type"],
+        "RecordNumber"     => log["record_number"],
+        "SourceName"       => log["source"],
+        "TimeGenerated"    => log["time_generated"],
+        "TimeWritten"      => log["time_written"],
+        "Type"             => log["event_type"],
+        "User"             => log["user"],
+        "InsertionStrings" => log["string_inserts"]
+      )
 
       decorate(event)
       queue << event
