@@ -72,6 +72,8 @@ class LogStash::Inputs::EventLog < LogStash::Inputs::Base
     @logger.error("Windows Event Log error: #{ex}\n#{ex.backtrace}")
     sleep 1
     retry
+  ensure
+    @eventlog.close
   end # def run
 
 end # class LogStash::Inputs::EventLog
